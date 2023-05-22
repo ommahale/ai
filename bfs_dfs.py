@@ -1,41 +1,54 @@
-def dfs(visited,graph,node):
-    if node not in visited:
-        print(node,end = " ")
-        visited.add(node)
-        for neighbour in graph[node]:
-            dfs(visited, graph, neighbour)
+from collections import defaultdict
 
-def bfs(visited,graph,node,queue):
-    visited.add(node)
-    queue.append(node)
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)
+    
+    def add_edge(self, u, v):
+        self.graph[u].append(v)
+        self.graph[v].append(u)
+    
+    def dfs(self, v, visited):
+        visited.add(v)
+        print(v, end=" ")
+        
+        for neighbor in self.graph[v]:
+            if neighbor not in visited:
+                self.dfs(neighbor, visited)
+    
+    def bfs(self, v):
+        visited = set()
+        queue = []
+        
+        visited.add(v)
+        queue.append(v)
+        
+        while queue:
+            node = queue.pop(0)
+            print(node, end=" ")
+            
+            for neighbor in self.graph[node]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    queue.append(neighbor)
 
-    while queue:
-        s = queue.pop(0)
-        print(s,end = " ")
-        for neighbour in graph[s]:
-            if neighbour not in visited:
-                visited.add(neighbour)
-                queue.append(neighbour)
+# Create an empty graph
+graph = Graph()
 
-def main():
-    visited1 = set() # TO keep track of DFS visited nodes
-    visited2 = set() # TO keep track of BFS visited nodes
-    queue = []       # For BFS
-    n = int(input("Enter number of nodes : "))
-    graph = dict()
+# Take user input for the number of edges
+num_edges = int(input("Enter the number of edges: "))
 
-    for i in range(1,n+1):
-        edges = int(input("Enter number of edges for node {} : ".format(i)))
-        graph[i] = list()
-        for j in range(1,edges+1):
-            node = int(input("Enter edge {} for node {} : ".format(j,i)))
-            graph[i].append(node)
+# Take user input for the edges
+for _ in range(num_edges):
+    u, v = input("Enter edge (u v): ").split()
+    graph.add_edge(u, v)
 
-    print("The following is DFS")
-    dfs(visited1, graph, 1)
-    print()
-    print("The following is BFS")
-    bfs(visited2, graph, 1, queue)
+# Perform DFS traversal
+start_vertex = input("Enter the starting vertex for DFS: ")
+print("DFS Traversal:")
+graph.dfs(start_vertex, set())
 
-if __name__=="main_":
-    main()
+# Perform BFS traversal
+start_vertex = input("\nEnter the starting vertex for BFS: ")
+print("\nBFS Traversal:")
+graph.bfs(start_vertex)
